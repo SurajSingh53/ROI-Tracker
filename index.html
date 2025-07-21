@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthKart - Influencer Marketing Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar__header">
+            <div class="sidebar__logo">
+                <h2>HealthKart</h2>
+                <span class="sidebar__subtitle">Influencer Analytics</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar__nav">
+            <li class="sidebar__item sidebar__item--active" data-section="executive">
+                <span class="sidebar__icon">📊</span>
+                <span class="sidebar__text">Executive Dashboard</span>
+            </li>
+            <li class="sidebar__item" data-section="campaigns">
+                <span class="sidebar__icon">🎯</span>
+                <span class="sidebar__text">Campaign Analytics</span>
+            </li>
+            <li class="sidebar__item" data-section="influencers">
+                <span class="sidebar__icon">👥</span>
+                <span class="sidebar__text">Influencer Intelligence</span>
+            </li>
+            <li class="sidebar__item" data-section="financial">
+                <span class="sidebar__icon">💰</span>
+                <span class="sidebar__text">Financial Analytics</span>
+            </li>
+            <li class="sidebar__item" data-section="platforms">
+                <span class="sidebar__icon">📱</span>
+                <span class="sidebar__text">Platform Performance</span>
+            </li>
+            <li class="sidebar__item" data-section="payouts">
+                <span class="sidebar__icon">💳</span>
+                <span class="sidebar__text">Payout Tracking</span>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Executive Dashboard Section -->
+        <section id="executive" class="dashboard-section dashboard-section--active">
+            <header class="section-header">
+                <h1>Executive Dashboard</h1>
+                <div class="header-controls">
+                    <select class="form-control form-control--sm">
+                        <option>Last 30 Days</option>
+                        <option>Last Quarter</option>
+                        <option>Last Year</option>
+                    </select>
+                    <button class="btn btn--primary btn--sm">Export Report</button>
+                </div>
+            </header>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-card__icon kpi-card__icon--revenue">💹</div>
+                    <div class="kpi-card__content">
+                        <h3 class="kpi-card__title">Total Revenue</h3>
+                        <div class="kpi-card__value">₹45.2M</div>
+                        <div class="kpi-card__change kpi-card__change--positive">+18.5%</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-card__icon kpi-card__icon--roas">🎯</div>
+                    <div class="kpi-card__content">
+                        <h3 class="kpi-card__title">Overall ROAS</h3>
+                        <div class="kpi-card__value">3.53x</div>
+                        <div class="kpi-card__change kpi-card__change--positive">+12.3%</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-card__icon kpi-card__icon--incremental">📈</div>
+                    <div class="kpi-card__content">
+                        <h3 class="kpi-card__title">Incremental ROAS</h3>
+                        <div class="kpi-card__value">2.85x</div>
+                        <div class="kpi-card__change kpi-card__change--positive">+8.7%</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-card__icon kpi-card__icon--campaigns">🚀</div>
+                    <div class="kpi-card__content">
+                        <h3 class="kpi-card__title">Active Campaigns</h3>
+                        <div class="kpi-card__value">18</div>
+                        <div class="kpi-card__change kpi-card__change--neutral">3 new</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-card__icon kpi-card__icon--influencers">👥</div>
+                    <div class="kpi-card__content">
+                        <h3 class="kpi-card__title">Total Influencers</h3>
+                        <div class="kpi-card__value">247</div>
+                        <div class="kpi-card__change kpi-card__change--positive">+15 this month</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-card__icon kpi-card__icon--orders">📦</div>
+                    <div class="kpi-card__content">
+                        <h3 class="kpi-card__title">Total Orders</h3>
+                        <div class="kpi-card__value">8,945</div>
+                        <div class="kpi-card__change kpi-card__change--positive">+22.1%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Revenue Trends</h3>
+                        <span class="chart-subtitle">Monthly performance overview</span>
+                    </div>
+                    <canvas id="revenueChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>ROAS by Campaign</h3>
+                        <span class="chart-subtitle">Return on ad spend comparison</span>
+                    </div>
+                    <canvas id="roasChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Performance Table -->
+            <div class="card">
+                <div class="card__header">
+                    <h3>Top Performing Campaigns</h3>
+                </div>
+                <div class="card__body">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Campaign</th>
+                                    <th>Brand</th>
+                                    <th>Budget</th>
+                                    <th>Spent</th>
+                                    <th>Revenue</th>
+                                    <th>ROAS</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="campaignTableBody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Campaign Analytics Section -->
+        <section id="campaigns" class="dashboard-section">
+            <header class="section-header">
+                <h1>Campaign Analytics</h1>
+                <div class="header-controls">
+                    <select class="form-control form-control--sm">
+                        <option>All Brands</option>
+                        <option>MuscleBlaze</option>
+                        <option>HKVitals</option>
+                        <option>Gritzo</option>
+                    </select>
+                    <button class="btn btn--secondary btn--sm">Create Campaign</button>
+                </div>
+            </header>
+
+            <div class="campaign-grid">
+                <div class="campaign-card">
+                    <div class="campaign-card__status campaign-card__status--active">Active</div>
+                    <h3 class="campaign-card__title">Summer Fitness Revolution 2024</h3>
+                    <div class="campaign-card__brand">MuscleBlaze</div>
+                    <div class="campaign-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">Budget</span>
+                            <span class="metric__value">₹50L</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">ROAS</span>
+                            <span class="metric__value">5.0x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Orders</span>
+                            <span class="metric__value">3,200</span>
+                        </div>
+                    </div>
+                    <div class="campaign-card__progress">
+                        <div class="progress-bar">
+                            <div class="progress-bar__fill" style="width: 75%"></div>
+                        </div>
+                        <span class="progress-text">75% Complete</span>
+                    </div>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-card__status campaign-card__status--active">Active</div>
+                    <h3 class="campaign-card__title">Women's Wellness Journey</h3>
+                    <div class="campaign-card__brand">HKVitals</div>
+                    <div class="campaign-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">Budget</span>
+                            <span class="metric__value">₹35L</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">ROAS</span>
+                            <span class="metric__value">4.0x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Orders</span>
+                            <span class="metric__value">2,800</span>
+                        </div>
+                    </div>
+                    <div class="campaign-card__progress">
+                        <div class="progress-bar">
+                            <div class="progress-bar__fill" style="width: 80%"></div>
+                        </div>
+                        <span class="progress-text">80% Complete</span>
+                    </div>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-card__status campaign-card__status--completed">Completed</div>
+                    <h3 class="campaign-card__title">Smart Kids Nutrition</h3>
+                    <div class="campaign-card__brand">Gritzo</div>
+                    <div class="campaign-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">Budget</span>
+                            <span class="metric__value">₹22L</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">ROAS</span>
+                            <span class="metric__value">4.0x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Orders</span>
+                            <span class="metric__value">1,950</span>
+                        </div>
+                    </div>
+                    <div class="campaign-card__progress">
+                        <div class="progress-bar">
+                            <div class="progress-bar__fill" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-text">Completed</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Attribution Analysis</h3>
+                        <span class="chart-subtitle">Revenue by touchpoint</span>
+                    </div>
+                    <canvas id="attributionChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Campaign Performance</h3>
+                        <span class="chart-subtitle">Revenue vs Investment</span>
+                    </div>
+                    <canvas id="performanceChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Influencer Intelligence Section -->
+        <section id="influencers" class="dashboard-section">
+            <header class="section-header">
+                <h1>Influencer Intelligence</h1>
+                <div class="header-controls">
+                    <div class="search-box">
+                        <input type="text" class="form-control" placeholder="Search influencers...">
+                    </div>
+                    <select class="form-control form-control--sm">
+                        <option>All Categories</option>
+                        <option>Fitness</option>
+                        <option>Wellness</option>
+                        <option>Nutrition</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="influencer-grid">
+                <div class="influencer-card">
+                    <div class="influencer-card__avatar">
+                        <div class="avatar">SG</div>
+                        <div class="influencer-card__tier">Macro</div>
+                    </div>
+                    <div class="influencer-card__info">
+                        <h3 class="influencer-card__name">Fitness Guru Sahil</h3>
+                        <div class="influencer-card__platform">Instagram • 1.25M followers</div>
+                        <div class="influencer-card__category">Fitness</div>
+                    </div>
+                    <div class="influencer-card__metrics">
+                        <div class="metric-small">
+                            <span class="metric-small__label">ROAS</span>
+                            <span class="metric-small__value">6.8x</span>
+                        </div>
+                        <div class="metric-small">
+                            <span class="metric-small__label">Revenue</span>
+                            <span class="metric-small__value">₹25L</span>
+                        </div>
+                        <div class="metric-small">
+                            <span class="metric-small__label">Engagement</span>
+                            <span class="metric-small__value">4.2%</span>
+                        </div>
+                    </div>
+                    <div class="influencer-card__scores">
+                        <div class="score-badge score-badge--high">Brand Safety: 9.2</div>
+                        <div class="score-badge score-badge--high">Audience Quality: 8.8</div>
+                    </div>
+                </div>
+
+                <div class="influencer-card">
+                    <div class="influencer-card__avatar">
+                        <div class="avatar">WK</div>
+                        <div class="influencer-card__tier">Macro</div>
+                    </div>
+                    <div class="influencer-card__info">
+                        <h3 class="influencer-card__name">Wellness Queen Kavya</h3>
+                        <div class="influencer-card__platform">YouTube • 890K followers</div>
+                        <div class="influencer-card__category">Wellness</div>
+                    </div>
+                    <div class="influencer-card__metrics">
+                        <div class="metric-small">
+                            <span class="metric-small__label">ROAS</span>
+                            <span class="metric-small__value">5.4x</span>
+                        </div>
+                        <div class="metric-small">
+                            <span class="metric-small__label">Revenue</span>
+                            <span class="metric-small__value">₹18L</span>
+                        </div>
+                        <div class="metric-small">
+                            <span class="metric-small__label">Engagement</span>
+                            <span class="metric-small__value">3.8%</span>
+                        </div>
+                    </div>
+                    <div class="influencer-card__scores">
+                        <div class="score-badge score-badge--high">Brand Safety: 9.8</div>
+                        <div class="score-badge score-badge--high">Audience Quality: 9.1</div>
+                    </div>
+                </div>
+
+                <div class="influencer-card">
+                    <div class="influencer-card__avatar">
+                        <div class="avatar">SE</div>
+                        <div class="influencer-card__tier">Macro</div>
+                    </div>
+                    <div class="influencer-card__info">
+                        <h3 class="influencer-card__name">Sports Nutrition Expert</h3>
+                        <div class="influencer-card__platform">Instagram • 675K followers</div>
+                        <div class="influencer-card__category">Sports Nutrition</div>
+                    </div>
+                    <div class="influencer-card__metrics">
+                        <div class="metric-small">
+                            <span class="metric-small__label">ROAS</span>
+                            <span class="metric-small__value">7.2x</span>
+                        </div>
+                        <div class="metric-small">
+                            <span class="metric-small__label">Revenue</span>
+                            <span class="metric-small__value">₹16.5L</span>
+                        </div>
+                        <div class="metric-small">
+                            <span class="metric-small__label">Engagement</span>
+                            <span class="metric-small__value">5.1%</span>
+                        </div>
+                    </div>
+                    <div class="influencer-card__scores">
+                        <div class="score-badge score-badge--high">Brand Safety: 9.4</div>
+                        <div class="score-badge score-badge--high">Audience Quality: 8.9</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Financial Analytics Section -->
+        <section id="financial" class="dashboard-section">
+            <header class="section-header">
+                <h1>Financial Analytics</h1>
+                <div class="header-controls">
+                    <button class="btn btn--outline btn--sm">Download P&L</button>
+                    <button class="btn btn--primary btn--sm">Generate Report</button>
+                </div>
+            </header>
+
+            <div class="financial-grid">
+                <div class="financial-card">
+                    <h3>Customer Metrics</h3>
+                    <div class="financial-metrics">
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">Avg Order Value</span>
+                            <span class="financial-metric__value">₹5,053</span>
+                        </div>
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">Customer Acquisition Cost</span>
+                            <span class="financial-metric__value">₹1,431</span>
+                        </div>
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">Lifetime Value</span>
+                            <span class="financial-metric__value">₹12,400</span>
+                        </div>
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">LTV:CAC Ratio</span>
+                            <span class="financial-metric__value">8.7:1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="financial-card">
+                    <h3>Brand Performance</h3>
+                    <div class="financial-metrics">
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">Brand Lift</span>
+                            <span class="financial-metric__value">23.5%</span>
+                        </div>
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">Share of Voice</span>
+                            <span class="financial-metric__value">18.7%</span>
+                        </div>
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">Market Share Growth</span>
+                            <span class="financial-metric__value">+12.3%</span>
+                        </div>
+                        <div class="financial-metric">
+                            <span class="financial-metric__label">Brand Awareness</span>
+                            <span class="financial-metric__value">67%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>ROI Breakdown</h3>
+                        <span class="chart-subtitle">Return on investment by channel</span>
+                    </div>
+                    <canvas id="roiChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Cost Structure</h3>
+                        <span class="chart-subtitle">Spend allocation breakdown</span>
+                    </div>
+                    <canvas id="costChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Platform Performance Section -->
+        <section id="platforms" class="dashboard-section">
+            <header class="section-header">
+                <h1>Platform Performance</h1>
+                <div class="header-controls">
+                    <select class="form-control form-control--sm">
+                        <option>All Platforms</option>
+                        <option>Instagram</option>
+                        <option>YouTube</option>
+                        <option>Twitter</option>
+                        <option>Facebook</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="platform-grid">
+                <div class="platform-card platform-card--instagram">
+                    <div class="platform-card__header">
+                        <div class="platform-card__icon">📸</div>
+                        <h3>Instagram</h3>
+                    </div>
+                    <div class="platform-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">ROAS</span>
+                            <span class="metric__value">4.0x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Revenue</span>
+                            <span class="metric__value">₹20.8M</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Influencers</span>
+                            <span class="metric__value">98</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Engagement</span>
+                            <span class="metric__value">3.4%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card platform-card--youtube">
+                    <div class="platform-card__header">
+                        <div class="platform-card__icon">📹</div>
+                        <h3>YouTube</h3>
+                    </div>
+                    <div class="platform-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">ROAS</span>
+                            <span class="metric__value">4.0x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Revenue</span>
+                            <span class="metric__value">₹15.2M</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Influencers</span>
+                            <span class="metric__value">52</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Engagement</span>
+                            <span class="metric__value">2.1%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card platform-card--twitter">
+                    <div class="platform-card__header">
+                        <div class="platform-card__icon">🐦</div>
+                        <h3>Twitter</h3>
+                    </div>
+                    <div class="platform-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">ROAS</span>
+                            <span class="metric__value">3.0x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Revenue</span>
+                            <span class="metric__value">₹7.2M</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Influencers</span>
+                            <span class="metric__value">67</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Engagement</span>
+                            <span class="metric__value">1.8%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="platform-card platform-card--facebook">
+                    <div class="platform-card__header">
+                        <div class="platform-card__icon">👤</div>
+                        <h3>Facebook</h3>
+                    </div>
+                    <div class="platform-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">ROAS</span>
+                            <span class="metric__value">1.4x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Revenue</span>
+                            <span class="metric__value">₹2.0M</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Influencers</span>
+                            <span class="metric__value">30</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Engagement</span>
+                            <span class="metric__value">1.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container chart-container--full">
+                <div class="chart-header">
+                    <h3>Platform Comparison</h3>
+                    <span class="chart-subtitle">Revenue vs Spend across platforms</span>
+                </div>
+                <canvas id="platformChart" width="800" height="300"></canvas>
+            </div>
+        </section>
+
+        <!-- Payout Tracking Section -->
+        <section id="payouts" class="dashboard-section">
+            <header class="section-header">
+                <h1>Payout Tracking</h1>
+                <div class="header-controls">
+                    <button class="btn btn--secondary btn--sm">Process Payments</button>
+                    <button class="btn btn--primary btn--sm">Generate Invoice</button>
+                </div>
+            </header>
+
+            <div class="payout-summary">
+                <div class="payout-card">
+                    <h3>Total Pending</h3>
+                    <div class="payout-amount">₹2.1M</div>
+                    <div class="payout-count">42 influencers</div>
+                </div>
+                <div class="payout-card">
+                    <h3>Paid This Month</h3>
+                    <div class="payout-amount">₹4.5M</div>
+                    <div class="payout-count">128 payments</div>
+                </div>
+                <div class="payout-card">
+                    <h3>Average Payout</h3>
+                    <div class="payout-amount">₹16,500</div>
+                    <div class="payout-count">per campaign</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card__header">
+                    <h3>Recent Payouts</h3>
+                </div>
+                <div class="card__body">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Influencer</th>
+                                    <th>Total Earned</th>
+                                    <th>Pending</th>
+                                    <th>Paid</th>
+                                    <th>Campaigns</th>
+                                    <th>Payment Basis</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payoutTableBody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
