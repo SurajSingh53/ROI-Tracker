@@ -7,7 +7,7 @@ This is a comprehensive, enterprise-grade influencer marketing analytics dashboa
 ## 🎯 Key Features
 
 ### Executive Dashboard
-- **Real-time KPIs**: Total revenue (₹45.2Cr), ROAS (3.53x), active campaigns (18), influencers (247)
+- **Real-time KPIs**: Total revenue (₹45.2Cr), ROAS (3.5x), active campaigns (18), influencers (247)
 - **Performance Trending**: Month-over-month growth tracking and forecast indicators
 - **Executive Alerts**: Automated notifications for performance anomalies
 - **Brand Comparison**: Comparative analysis across MuscleBlaze, HK Vitals, and Gritzo
